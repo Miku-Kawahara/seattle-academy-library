@@ -40,7 +40,6 @@ public class LoginController {
 
 		// メアドとパスワードに一致するユーザー取得
 		UserInfo selectedUserInfo = usersService.selectUserInfo(email, password);
-		System.out.println("A");
 		// ユーザーが存在すればログイン、存在しなければエラー(タスク２)
 		if (selectedUserInfo != null) {
 			return "redirect:/home";
