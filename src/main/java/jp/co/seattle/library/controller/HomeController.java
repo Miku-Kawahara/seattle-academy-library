@@ -37,5 +37,4 @@ public class HomeController {
 		model.addAttribute("booklist",book);
 		return "home";
 	}
-
 }
