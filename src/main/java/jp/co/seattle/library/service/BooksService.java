@@ -33,7 +33,9 @@ public class BooksService {
 
 		// TODO 書籍名の昇順で書籍情報を取得するようにSQLを修正（タスク３）
 		List<BookInfo> getedBookList = jdbcTemplate.query(
-				"",
+				"SELECT * FROM books ORDER BY title ASC ;",
+				//booksテーブルのレコードを昇順で表示している、ASCが昇順、DESCが降順
+				//*だと、前列を指定。”name"だと１つの列ごとに指定。
 				new BookInfoRowMapper());
 
 		return getedBookList;
