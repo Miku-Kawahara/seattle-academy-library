@@ -33,7 +33,9 @@ public class BooksService {
 
 		// TODO 書籍名の昇順で書籍情報を取得するようにSQLを修正（タスク３）
 		List<BookInfo> getedBookList = jdbcTemplate.query(
-				"",
+				"SELECT * FROM books ORDER BY title ASC ;",
+				//booksテーブルのレコードを昇順で表示している、ASCが昇順、DESCが降順
+				//*だと、前列を指定。”name"だと１つの列ごとに指定。
 				new BookInfoRowMapper());
 
 		return getedBookList;
@@ -47,7 +49,7 @@ public class BooksService {
 	 */
 	public BookDetailsInfo getBookInfo(int bookId) {
 		String sql = "SELECT id, title, author, publisher, publish_date, isbn, description, thumbnail_url, thumbnail_name FROM books WHERE books.id = ? ORDER BY title ASC;";
-
+		//変化する値の部分に「?」を使用する
 		BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper(), bookId);
 
 		return bookDetailsInfo;
@@ -61,7 +63,7 @@ public class BooksService {
 	 */
 	public int registBook(BookDetailsInfo bookInfo) {
 		// TODO 取得した書籍情報を登録し、その書籍IDを返却するようにSQLを修正（タスク４）
-		String sql = "INSERT INTO books(title,author,publisher,publish_date,thumbnail_name,thumbnail_url,isbn,description,reg_date,upd_date) VALUES(?,?,?,?,?,?,?,?,CURRENT_DATE,CURRENT_DATE) returning id";
+		String sql = "INSERT INTO books(title,author,publisher,publish_date,thumbnail_name,thumbnail_url,isbn,description,reg_date,upd_date) VALUES(?,?,?,?,?,?,?,?,now(),now()) returning id";
 
 		int bookId = jdbcTemplate.queryForObject(sql, int.class, bookInfo.getTitle(), bookInfo.getAuthor(),
 				bookInfo.getPublisher(), bookInfo.getPublishDate(), bookInfo.getThumbnailName(),
@@ -81,7 +83,7 @@ public class BooksService {
 	}
 
 	/**
-	 * 書籍情報を更新する
+	 * 書籍情報を更新す
 	 * 
 	 * @param bookInfo
 	 */
@@ -89,12 +91,13 @@ public class BooksService {
 		String sql;
 		if (bookInfo.getThumbnailUrl() == null) {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET (title,author,publisher,publish_date,isbn,description,upd_date) = (?,?,?,?,?,?,CURRENT_DATE) WHERE id=? ";
+			//UPDATE (表名) SET (カラム名) = (値) WHERE (条件);
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
 					bookInfo.getPublishDate(), bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
 		} else {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET (title,author,publisher,publish_date,thumbnail_name,thumbnail_url,isbn,description) = (?,?,?,?,?,?,?,?,CURRENT_DATE) WHERE id=? ";
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
 					bookInfo.getPublishDate(), bookInfo.getThumbnailName(), bookInfo.getThumbnailUrl(),
 					bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
