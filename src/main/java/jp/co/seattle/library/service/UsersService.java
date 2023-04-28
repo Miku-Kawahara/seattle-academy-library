@@ -51,5 +51,15 @@ public class UsersService {
 			return null;
 		}
 	}
+	//ユーザー情報を更新する
+	
+	public void resetUser(UserInfo userInfo) {
+
+		// SQL生成
+		//UPDATE (表名) SET (カラム名1) = (値1) WHERE (条件);
+		String sql = "UPDATE users SET password = ?"
+		
+		jdbcTemplate.update(sql, userInfo.password());
+	}
 
 }
